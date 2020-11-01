@@ -75,6 +75,10 @@ app.post('/persons/', (request, response) => {
         //     notes = notes.concat(note)  // save note to notes
         //     response.json(note)  // display note as response
        // }
+
+       person.save().then(savedContact => {
+           response.json(savedContact)
+       })
        
     } else {
         response.status(404).json({
