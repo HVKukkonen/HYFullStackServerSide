@@ -1,6 +1,10 @@
+// configure environment variables from dotenv
+require('dotenv').config()
 const { response } = require('express')
 const express = require('express')
 const app = express()
+// person mongoose model from models
+const Person = require('./models/person')
 
 notes = [
     { 
@@ -35,7 +39,9 @@ morgan.token('reqbody', function(req, res) {return JSON.stringify(req.body)})
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :reqbody"))
 
 app.get('/persons/', (req, res) => {
-    res.json(notes)
+    Person.find({}).then(notes => {
+        response.json(notes)
+      })
 })
 
 app.get('/info/', (req, res) => {
@@ -43,8 +49,7 @@ app.get('/info/', (req, res) => {
         `<h2>Phonebook has info for ${notes.length} contacts </h2>
         ${new Date()}`
     )
-}
-)
+})
 
 app.get('/persons/:id', (request, response) => {
     // value for variable id in URL
