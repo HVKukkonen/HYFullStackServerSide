@@ -6,29 +6,6 @@ const app = express()
 // person mongoose model from models
 const Person = require('./models/person')
 
-notes = [
-    { 
-      "name": "Arto Hellas", 
-      "number": "040-123456",
-      "id": 1
-    },
-    { 
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    { 
-      "name": "Dan Abramov", 
-      "number": "12-43-234345",
-      "id": 3
-    },
-    { 
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122",
-      "id": 4
-    }
-]
-
 const cors = require('cors')
 app.use(cors())
 
@@ -73,26 +50,32 @@ app.use(express.json())  // json parser for incoming data
 
 app.post('/persons/', (request, response) => {
 
-    const rng = Math.random(10, 10**8)  // generate random id
+    // const rng = Math.random(10, 10**8)  // generate random id
 
     // save the body of the request as it is the incoming data 
-    const note = {
+    const person = new Person({
         "name": request.body.name,
         "number": request.body.number,
-        "id": rng
-    }
+    })
+
+    // const note = {
+    //     "name": request.body.name,
+    //     "number": request.body.number,
+    //     "id": rng
+    // }
 
     // if name and number exist
-    if (note.name && note.number) {
+    if (person.name && person.number) {
         // name is not unique
-        if (notes.find(contact => contact.name === note.name)) {
-            response.status(403).json({
-                error: 'name must be unique'
-              })  // 403 Forbidden
-        } else {
-            notes = notes.concat(note)  // save note to notes
-            response.json(note)  // display note as response
-        }
+        // if (notes.find(contact => contact.name === note.name)) {
+        //     response.status(403).json({
+        //         error: 'name must be unique'
+        //       })  // 403 Forbidden
+        // } else {
+        //     notes = notes.concat(note)  // save note to notes
+        //     response.json(note)  // display note as response
+       // }
+       
     } else {
         response.status(404).json({
             error: 'name not found'
