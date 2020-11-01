@@ -27,24 +27,22 @@ const Person = mongoose.model('Persons', noteSchema)
 
 if (process.argv.length>3) {
     console.log('Person input arguments')
-
     const person = new Person({
         name: process.argv[3],
         number: process.argv[4]
     })
     
     person.save().then(response => {
-        console.log('note saved!')
+        console.log(`added ${person.name} number ${person.number} to phonebook`)
         mongoose.connection.close()
       })
+} else {
+    const note = Person.find({}).then(result => {
+    result.forEach(note => {
+      console.log(note)
+    })
+    mongoose.connection.close()
+  })
 }
-
-
-// const note = Note.find({}).then(result => {
-//     result.forEach(note => {
-//       console.log(note)
-//     })
-//     mongoose.connection.close()
-//   })
 
 // wif wuf
