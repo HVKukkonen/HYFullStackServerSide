@@ -7,10 +7,10 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy:build": "Xcopy build \\\"../../../HYFullStackServerSide/build/\\\" /y /i",
+    "copy:build": "xcopy \"C:/Users/Valtteri/remote-code-folder/HYFullStack2020/osa2/puhelinluettelo/build\" \"C:/Users/Valtteri/remote-code-folder/HYFullStackServerSide/build\" /Y",
     "build:ui": "cd ../HYFullStack2020/osa2/puhelinluettelo && npm run build --prod ",
     "deploy": "git push heroku master",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+    "deploy:full": "npm run build:ui && npm run copy:build && git add . && git commit -m uibuild && git push && npm run deploy",
     "deploy:part": "git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
