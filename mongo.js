@@ -5,6 +5,11 @@ if (process.argv.length<3) {
   process.exit(1)
 }
 
+const noteSchema = new mongoose.Schema({
+    name: String,
+    number: String
+  })
+
 const Person = mongoose.model('Persons', noteSchema)
 
 if (process.argv.length>3) {
@@ -22,11 +27,6 @@ const url =
   // `mongodb+srv://fullstack:${password}@cluster0-ostce.mongodb.net/test?retryWrites=true`
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-
-const noteSchema = new mongoose.Schema({
-  name: String,
-  number: String
-})
 
 // const note = Note.find({}).then(result => {
 //     result.forEach(note => {
