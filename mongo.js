@@ -37,7 +37,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 
 // wif wuf
 
-note.save().then(response => {
+person.save().then(response => {
   console.log('note saved!')
   mongoose.connection.close()
 })
