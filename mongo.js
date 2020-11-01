@@ -35,10 +35,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 //     mongoose.connection.close()
 //   })
 
-const note = new Note({
-    name: 'HTML is Easy',
-    number: new Date(),
-  })
+// wif wuf
 
 note.save().then(response => {
   console.log('note saved!')
