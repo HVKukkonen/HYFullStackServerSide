@@ -5,6 +5,16 @@ if (process.argv.length<3) {
   process.exit(1)
 }
 
+const Person = mongoose.model('Persons', noteSchema)
+
+if (process.argv.length>3) {
+    console.log('Person input arguments')
+    const person = new Person({
+        name: process.argv[3],
+        number: process.argv[4]
+    })
+  }
+
 const password = process.argv[2]
 
 const url =
@@ -14,18 +24,20 @@ const url =
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
+  name: String,
+  number: String
 })
 
-const Note = mongoose.model('Note', noteSchema)
+// const note = Note.find({}).then(result => {
+//     result.forEach(note => {
+//       console.log(note)
+//     })
+//     mongoose.connection.close()
+//   })
 
-const note = Note.find({}).then(result => {
-    result.forEach(note => {
-      console.log(note)
-    })
-    mongoose.connection.close()
+const note = new Note({
+    name: 'HTML is Easy',
+    number: new Date(),
   })
 
 note.save().then(response => {
