@@ -42,6 +42,7 @@ app.get('/persons/:id', (request, response) => {
 app.delete('/persons/:id', (request, response) => {
     //const id = Number(request.params.id)  // request id from server
     //notes = notes.filter(note => note.id !== id)
+    console.log('Note: ', Note)
     Note.findByIdAndRemove(request.params.id)
         .then(result => {response.status(204).end()})
 })
