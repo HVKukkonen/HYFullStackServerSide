@@ -20,15 +20,18 @@ app.use(morgan(":method :url :status :res[content-length] - :response-time ms :r
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
-    // if (error.name === 'CastError') {
-    //   return response.status(400).send({ error: 'malformatted id' })
-    // }
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: error.message })
+      }
 
     next(error)
 }
 
 app.use(errorHandler)
-
 
 // ------------------------------------------ requests -------------------------------------------------------------
 app.get('/persons/', (request, response, next) => {
