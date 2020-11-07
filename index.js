@@ -56,7 +56,7 @@ const errorHandler = (error, request, response, next) => {
     next(error)
   }
   
-  app.use(errorHandler)
+  //app.use(errorHandler)
 
 app.post('/persons/', (request, response) => {
 
