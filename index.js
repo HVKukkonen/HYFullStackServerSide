@@ -10,6 +10,7 @@ const cors = require('cors')
 app.use(cors())
 
 app.use(express.static('build'))
+app.use(express.json())  // json parser for incoming data
 
 const morgan = require('morgan')
 morgan.token('reqbody', function(req, res) {return JSON.stringify(req.body)})
@@ -40,14 +41,22 @@ app.get('/persons/:id', (request, response) => {
 })
 
 app.delete('/persons/:id', (request, response) => {
-    //const id = Number(request.params.id)  // request id from server
-    // notes = notes.filter(note => note.id !== id)
-    //console.log('Note: ', Note)
     Person.findByIdAndRemove(request.params.id)
         .then(result => {response.status(204).end()})
+        .catch(error => next(error))
 })
 
-app.use(express.json())  // json parser for incoming data
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    // if (error.name === 'CastError') {
+    //   return response.status(400).send({ error: 'malformatted id' })
+    // }
+  
+    next(error)
+  }
+  
+  app.use(errorHandler)
 
 app.post('/persons/', (request, response) => {
 
