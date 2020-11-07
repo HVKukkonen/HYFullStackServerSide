@@ -13,13 +13,30 @@ app.use(express.static('build'))
 app.use(express.json())  // json parser for incoming data
 
 const morgan = require('morgan')
-morgan.token('reqbody', function(req, res) {return JSON.stringify(req.body)})
+morgan.token('reqbody', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :reqbody"))
 
-app.get('/persons/', (request, response) => {
-    Person.find({}).then(notes => {
-        response.json(notes)
-      })
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    // if (error.name === 'CastError') {
+    //   return response.status(400).send({ error: 'malformatted id' })
+    // }
+
+    next(error)
+}
+
+app.use(errorHandler)
+
+
+// ------------------------------------------ requests -------------------------------------------------------------
+app.get('/persons/', (request, response, next) => {
+    Person.find({})
+        .then(notes => {
+            response.json(notes)
+        })
+        .catch(error => next(error))
 })
 
 app.get('/info/', (req, res) => {
@@ -29,6 +46,7 @@ app.get('/info/', (req, res) => {
     )
 })
 
+// DEPRICATED
 app.get('/persons/:id', (request, response) => {
     // value for variable id in URL
     const id = Number(request.params.id)  // request id from server
@@ -40,39 +58,19 @@ app.get('/persons/:id', (request, response) => {
     }
 })
 
-app.delete('/persons/:id', (request, response) => {
+app.delete('/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {response.status(204).end()})
+        .then(result => { response.status(204).end() })
         .catch(error => next(error))
 })
 
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-  
-    // if (error.name === 'CastError') {
-    //   return response.status(400).send({ error: 'malformatted id' })
-    // }
-  
-    next(error)
-  }
-  
-  //app.use(errorHandler)
-
-app.post('/persons/', (request, response) => {
-
-    // const rng = Math.random(10, 10**8)  // generate random id
+app.post('/persons/', (request, response, next) => {
 
     // save the body of the request as it is the incoming data 
     const person = new Person({
         "name": request.body.name,
         "number": request.body.number,
     })
-
-    // const note = {
-    //     "name": request.body.name,
-    //     "number": request.body.number,
-    //     "id": rng
-    // }
 
     // if name and number exist
     if (person.name && person.number) {
@@ -84,20 +82,36 @@ app.post('/persons/', (request, response) => {
         // } else {
         //     notes = notes.concat(note)  // save note to notes
         //     response.json(note)  // display note as response
-       // }
+        // }
 
-       person.save().then(savedContact => {
-           response.json(savedContact)  // add payload to response
-       })
-       
+        person.save()
+            .then(savedContact => {
+                response.json(savedContact)  // add payload to response
+            })
+            .catch(error => next(error))
+
     } else {
         response.status(404).json({
             error: 'name not found'
-          })  // 404 Not found
+        })  // 404 Not found
     }
 
-
 })
+
+app.put('/persons/:id', (request, response, next) => {
+  
+    const person = {
+        "name": request.body.name,
+        "number": request.body.number,
+    }
+  
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+      .then(updatedNote => {
+        response.json(updatedNote)
+      })
+      .catch(error => next(error))
+  })
+
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
