@@ -13,11 +13,19 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
     })
 
 
-// input specification
+// -------------------------input specification----------------------------
+
+// data format validator
+var uniqueValidator = require('mongoose-unique-validator');
+
+// Define schema.
 const noteSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: { type: String, required: true, unique: true },
+    number: { type: String, required: true }
   })
+
+// Apply the uniqueValidator plugin to noteSchema
+noteSchema.plugin(uniqueValidator);
 
 noteSchema.set('toJSON', {
     transform: (document, returnedObject) => {
